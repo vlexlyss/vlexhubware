@@ -1576,6 +1576,8 @@ local mm2GunFarming = false
 
 local mm2AlwaysEvadeKnife = false
 
+local mm2CoinDelay = 0.5
+
 local gunTween = nil
 
 local gunHighlight = nil
@@ -1728,6 +1730,43 @@ local function createMM2Gui()
 		else
 			speedBox.Text = tostring(mm2CoinSpeed)
 			notify("MM2", "Invalid speed value")
+		end
+	end)
+	local delayLabel = create("TextLabel", {
+		Name = "DelayLabel",
+		Size = UDim2.new(0, 100, 0, 32),
+		Position = UDim2.new(0, 0, 0.665, 0),
+		BackgroundColor3 = Color3.fromRGB(85, 0, 255),
+		BackgroundTransparency = 0,
+		BorderSizePixel = 1,
+		Text = "Delay:",
+		TextColor3 = Color3.new(1, 1, 1),
+		TextSize = 16,
+		Font = Enum.Font.SourceSansBold,
+	}, mm2Gui)
+	local delayBox = create("TextBox", {
+		Name = "DelayBox",
+		Size = UDim2.new(0, 80, 0, 32),
+		Position = UDim2.new(0.38, 0, 0.665, 0),
+		BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+		BackgroundTransparency = 0.2,
+		BorderSizePixel = 1,
+		PlaceholderText = "0.05",
+		PlaceholderColor3 = Color3.new(0, 0, 0),
+		Text = "0.05",
+		TextColor3 = Color3.new(0, 0, 0),
+		TextSize = 14,
+		Font = Enum.Font.SourceSans,
+		ClearTextOnFocus = false,
+	}, mm2Gui)
+	delayBox.FocusLost:Connect(function()
+		local num = tonumber(string.trim(delayBox.Text))
+		if num and num >= 0 then
+			mm2CoinDelay = num
+			notify("MM2", "Pickup delay set to " .. num)
+		else
+			delayBox.Text = tostring(mm2CoinDelay)
+			notify("MM2", "Invalid delay value")
 		end
 	end)
 	local alwaysEvadeButton = create("TextButton", {
@@ -2129,7 +2168,7 @@ local function createMM2Gui()
 				local freezeHrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if freezeHrp and freezeHrp.Parent then
 					freezeHrp.Anchored = true
-					task.wait(0.05)
+					task.wait(mm2CoinDelay)
 					freezeHrp.Anchored = false
 				end
 			end
