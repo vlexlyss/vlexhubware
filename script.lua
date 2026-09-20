@@ -1,17 +1,11 @@
 -- VlexWare Exploit
 
 local Players = game:GetService("Players")
-
 local localPlayer = Players.LocalPlayer
-
 local playerGui = localPlayer:WaitForChild("PlayerGui")
-
 local TweenService = game:GetService("TweenService")
-
 local Workspace = game:GetService("Workspace")
-
 local UserInputService = game:GetService("UserInputService")
-
 local RunService = game:GetService("RunService")
 
 local function create(className, props, parent)
