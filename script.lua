@@ -1,11 +1,17 @@
 -- VlexWare Exploit
 
 local Players = game:GetService("Players")
+
 local localPlayer = Players.LocalPlayer
+
 local playerGui = localPlayer:WaitForChild("PlayerGui")
+
 local TweenService = game:GetService("TweenService")
+
 local Workspace = game:GetService("Workspace")
+
 local UserInputService = game:GetService("UserInputService")
+
 local RunService = game:GetService("RunService")
 
 local function create(className, props, parent)
@@ -1518,6 +1524,357 @@ function notify(title, message)
 
 end
 
+-- ===== PART COLOR TOOL (3rd Party) =====
+local mouse = localPlayer:GetMouse()
+
+local partColorButton = create("TextButton", {
+	Name = "PartColor",
+	Size = UDim2.new(0, 253, 0, 38),
+	Position = UDim2.new(0.0524, 0, 0.335, 0),
+	BackgroundColor3 = Color3.new(1, 1, 1),
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Text = "Part Color Tool",
+	TextColor3 = Color3.new(1, 1, 1),
+	TextStrokeColor3 = Color3.fromRGB(85, 0, 0),
+	TextSize = 30,
+	Font = Enum.Font.SourceSansBold,
+
+}, thirdGUI)
+
+local colorPickerFrame = create("Frame", {
+	Name = "ColorPicker",
+	Size = UDim2.new(0, 285, 0, 330),
+	Position = UDim2.new(0.3, 0, 0.3, 0),
+	BackgroundColor3 = Color3.fromRGB(40, 40, 50),
+	BackgroundTransparency = 0.1,
+	BorderSizePixel = 0,
+	Visible = false,
+
+}, vlexWare)
+
+create("UICorner", {CornerRadius = UDim.new(0, 6)}, colorPickerFrame)
+
+makeDraggable(colorPickerFrame, colorPickerFrame)
+
+create("TextLabel", {
+	Name = "Title",
+	Size = UDim2.new(1, -45, 0, 35),
+	Position = UDim2.new(0, 0, 0, 0),
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Text = "PART COLOR TOOL",
+	TextColor3 = Color3.new(1, 1, 1),
+	TextSize = 18,
+	Font = Enum.Font.SourceSansBold,
+
+}, colorPickerFrame)
+
+local colorPickerClose = create("TextButton", {
+	Name = "Close",
+	Size = UDim2.new(0, 30, 0, 30),
+	Position = UDim2.new(1, -35, 0, 3),
+	BackgroundColor3 = Color3.fromRGB(170, 0, 0),
+	BackgroundTransparency = 0.2,
+	BorderSizePixel = 0,
+	Text = "X",
+	TextColor3 = Color3.new(1, 1, 1),
+	TextSize = 18,
+	Font = Enum.Font.SourceSansBold,
+
+}, colorPickerFrame)
+
+create("UICorner", {CornerRadius = UDim.new(0, 6)}, colorPickerClose)
+
+local svSquare = create("Frame", {
+	Name = "SVSquare",
+	Size = UDim2.new(0, 200, 0, 150),
+	Position = UDim2.new(0, 12, 0, 45),
+	BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+	BorderSizePixel = 0,
+	ClipsDescendants = true,
+
+}, colorPickerFrame)
+
+create("UIGradient", {
+	Name = "WhiteToHue",
+	Rotation = 0,
+	Color = ColorSequence.new(Color3.new(1, 1, 1), Color3.new(1, 1, 1)),
+	Transparency = NumberSequence.new(0, 1),
+
+}, svSquare)
+
+local svOverlay = create("Frame", {
+	Name = "BlackOverlay",
+	Size = UDim2.new(1, 0, 1, 0),
+	BackgroundTransparency = 1,
+	BackgroundColor3 = Color3.new(0, 0, 0),
+	BorderSizePixel = 0,
+
+}, svSquare)
+
+create("UIGradient", {
+	Rotation = 90,
+	Color = ColorSequence.new(Color3.new(0, 0, 0), Color3.new(0, 0, 0)),
+	Transparency = NumberSequence.new(1, 0),
+
+}, svOverlay)
+
+local svDot = create("Frame", {
+	Name = "SVDot",
+	Size = UDim2.new(0, 10, 0, 10),
+	Position = UDim2.new(1, -5, 0, -5),
+	BackgroundColor3 = Color3.new(1, 1, 1),
+	BorderSizePixel = 2,
+
+}, svSquare)
+
+create("UICorner", {CornerRadius = UDim.new(1, 0)}, svDot)
+
+local hueBar = create("Frame", {
+	Name = "HueBar",
+	Size = UDim2.new(0, 20, 0, 150),
+	Position = UDim2.new(0, 222, 0, 45),
+	BackgroundColor3 = Color3.new(1, 1, 1),
+	BorderSizePixel = 0,
+	ClipsDescendants = true,
+
+}, colorPickerFrame)
+
+create("UIGradient", {
+	Rotation = 90,
+	Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+		ColorSequenceKeypoint.new(1/6, Color3.fromRGB(255, 255, 0)),
+		ColorSequenceKeypoint.new(2/6, Color3.fromRGB(0, 255, 0)),
+		ColorSequenceKeypoint.new(3/6, Color3.fromRGB(0, 255, 255)),
+		ColorSequenceKeypoint.new(4/6, Color3.fromRGB(0, 0, 255)),
+		ColorSequenceKeypoint.new(5/6, Color3.fromRGB(255, 0, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
+	}),
+
+}, hueBar)
+
+local hueDot = create("Frame", {
+	Name = "HueDot",
+	Size = UDim2.new(0, 24, 0, 4),
+	Position = UDim2.new(0, -2, 0, -2),
+	BackgroundColor3 = Color3.new(1, 1, 1),
+	BorderSizePixel = 0,
+
+}, hueBar)
+
+local previewSwatch = create("Frame", {
+	Name = "Preview",
+	Size = UDim2.new(0, 23, 0, 150),
+	Position = UDim2.new(0, 250, 0, 45),
+	BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+	BorderSizePixel = 1,
+
+}, colorPickerFrame)
+
+local hexBox = create("TextBox", {
+	Name = "Hex",
+	Size = UDim2.new(0, 120, 0, 30),
+	Position = UDim2.new(0, 12, 0, 210),
+	BackgroundColor3 = Color3.fromRGB(109, 109, 109),
+	BorderSizePixel = 2,
+	PlaceholderText = "HEX e.g. FF0000",
+	PlaceholderColor3 = Color3.fromRGB(47, 47, 47),
+	Text = "",
+	TextColor3 = Color3.new(0, 0, 0),
+	TextSize = 14,
+	Font = Enum.Font.SourceSans,
+	ClearTextOnFocus = true,
+
+}, colorPickerFrame)
+
+local hexApplyButton = create("TextButton", {
+	Name = "ApplyHex",
+	Size = UDim2.new(0, 60, 0, 30),
+	Position = UDim2.new(0, 140, 0, 210),
+	BackgroundColor3 = Color3.fromRGB(109, 109, 109),
+	BorderSizePixel = 2,
+	Text = "Set",
+	TextColor3 = Color3.new(0, 0, 0),
+	TextSize = 14,
+	Font = Enum.Font.SourceSansBold,
+
+}, colorPickerFrame)
+
+local paintToggleButton = create("TextButton", {
+	Name = "PaintToggle",
+	Size = UDim2.new(0, 261, 0, 40),
+	Position = UDim2.new(0, 12, 0, 250),
+	BackgroundColor3 = Color3.fromRGB(85, 0, 0),
+	BackgroundTransparency = 0.2,
+	BorderSizePixel = 1,
+	Text = "Paint Mode: OFF",
+	TextColor3 = Color3.new(1, 1, 1),
+	TextSize = 18,
+	Font = Enum.Font.SourceSansBold,
+
+}, colorPickerFrame)
+
+create("UICorner", {CornerRadius = UDim.new(0, 4)}, paintToggleButton)
+
+create("TextLabel", {
+	Name = "Hint",
+	Size = UDim2.new(0, 261, 0, 28),
+	Position = UDim2.new(0, 12, 0, 296),
+	BackgroundTransparency = 1,
+	BorderSizePixel = 0,
+	Text = "Turn Paint Mode ON, then click any part",
+	TextColor3 = Color3.fromRGB(200, 200, 200),
+	TextSize = 14,
+	Font = Enum.Font.SourceSans,
+
+}, colorPickerFrame)
+
+local paintHue = 0
+
+local paintSat = 1
+
+local paintVal = 1
+
+local paintColor = Color3.fromRGB(255, 0, 0)
+
+local paintMode = false
+
+local function updateColorPicker()
+	svSquare.BackgroundColor3 = Color3.fromHSV(paintHue, 1, 1)
+	paintColor = Color3.fromHSV(paintHue, paintSat, paintVal)
+	previewSwatch.BackgroundColor3 = paintColor
+	svDot.Position = UDim2.new(paintSat, -5, 1 - paintVal, -5)
+	hueDot.Position = UDim2.new(0, -2, paintHue, -2)
+	if not hexBox:IsFocused() then
+		hexBox.Text = string.format("%02X%02X%02X",
+			math.floor(paintColor.R * 255 + 0.5),
+			math.floor(paintColor.G * 255 + 0.5),
+			math.floor(paintColor.B * 255 + 0.5))
+	end
+
+end
+
+local draggingSV = false
+
+local draggingHue = false
+
+local function updateFromSV()
+	local relX = (mouse.X - svSquare.AbsolutePosition.X) / math.max(svSquare.AbsoluteSize.X, 1)
+	local relY = (mouse.Y - svSquare.AbsolutePosition.Y) / math.max(svSquare.AbsoluteSize.Y, 1)
+	paintSat = math.clamp(relX, 0, 1)
+	paintVal = 1 - math.clamp(relY, 0, 1)
+	updateColorPicker()
+
+end
+
+local function updateFromHue()
+	local relY = (mouse.Y - hueBar.AbsolutePosition.Y) / math.max(hueBar.AbsoluteSize.Y, 1)
+	paintHue = math.clamp(relY, 0, 1)
+	updateColorPicker()
+
+end
+
+svSquare.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		draggingSV = true
+		updateFromSV()
+	end
+
+end)
+
+hueBar.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		draggingHue = true
+		updateFromHue()
+	end
+
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		if draggingSV then
+			updateFromSV()
+		elseif draggingHue then
+			updateFromHue()
+		end
+	end
+
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		draggingSV = false
+		draggingHue = false
+	end
+
+end)
+
+hexApplyButton.MouseButton1Click:Connect(function()
+	local color = parseHexColor(hexBox.Text)
+	if color then
+		paintHue, paintSat, paintVal = Color3.toHSV(color)
+		paintColor = color
+		updateColorPicker()
+		notify("Part Color", "Color set")
+	else
+		notify("Part Color", "Invalid hex color")
+	end
+
+end)
+
+paintToggleButton.MouseButton1Click:Connect(function()
+	paintMode = not paintMode
+	if paintMode then
+		paintToggleButton.Text = "Paint Mode: ON"
+		paintToggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+		notify("Part Color", "Paint mode ON - click parts to recolor")
+	else
+		paintToggleButton.Text = "Paint Mode: OFF"
+		paintToggleButton.BackgroundColor3 = Color3.fromRGB(85, 0, 0)
+		notify("Part Color", "Paint mode OFF")
+	end
+
+end)
+
+partColorButton.MouseButton1Click:Connect(function()
+	colorPickerFrame.Visible = not colorPickerFrame.Visible
+
+end)
+
+colorPickerClose.MouseButton1Click:Connect(function()
+	colorPickerFrame.Visible = false
+	paintMode = false
+	paintToggleButton.Text = "Paint Mode: OFF"
+	paintToggleButton.BackgroundColor3 = Color3.fromRGB(85, 0, 0)
+
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if not paintMode then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		local cam = Workspace.CurrentCamera
+		if not cam then return end
+		local ray = cam:ScreenPointToRay(mouse.X, mouse.Y)
+		local rayParams = RaycastParams.new()
+		rayParams.FilterType = Enum.RaycastFilterType.Exclude
+		local excludeList = {}
+		if localPlayer.Character then
+			table.insert(excludeList, localPlayer.Character)
+		end
+		rayParams.FilterDescendantsInstances = excludeList
+		local result = Workspace:Raycast(ray.Origin, ray.Direction * 1000, rayParams)
+		if result and result.Instance and result.Instance:IsA("BasePart") then
+			result.Instance.Color = paintColor
+		end
+	end
+
+end)
+
+updateColorPicker()
+
 local spyButton = thirdGUI:FindFirstChild("Spy")
 
 local dexPlusButton = thirdGUI:FindFirstChild("DexPlus")
@@ -1603,7 +1960,7 @@ local function createMM2Gui()
 		BackgroundColor3 = Color3.fromRGB(85, 0, 255),
 		BackgroundTransparency = 0,
 		BorderSizePixel = 0,
-		CanvasSize = UDim2.new(0, 0, 1, 0),
+		CanvasSize = UDim2.new(0, 0, 1.4, 0),
 		ScrollBarThickness = 12,
 		ScrollingDirection = Enum.ScrollingDirection.XY,
 		ClipsDescendants = true,
@@ -1658,6 +2015,18 @@ local function createMM2Gui()
 		BackgroundTransparency = 0.2,
 		BorderSizePixel = 1,
 		Text = "Role ESP: OFF",
+		TextColor3 = Color3.new(0, 0, 0),
+		TextSize = 20,
+		Font = Enum.Font.SourceSansBold,
+	}, mm2Gui)
+	local gunDropButton = create("TextButton", {
+		Name = "GunDropESP",
+		Size = UDim2.new(0, 272, 0, 50),
+		Position = UDim2.new(0, 0, 0.95, 0),
+		BackgroundColor3 = Color3.fromRGB(85, 0, 0),
+		BackgroundTransparency = 0.2,
+		BorderSizePixel = 1,
+		Text = "GunDrop Highlight: OFF",
 		TextColor3 = Color3.new(0, 0, 0),
 		TextSize = 20,
 		Font = Enum.Font.SourceSansBold,
@@ -1790,7 +2159,7 @@ local function createMM2Gui()
 	create("TextLabel", {
 		Name = "Footer",
 		Size = UDim2.new(0, 272, 0, 34),
-		Position = UDim2.new(0, 0, 0.900118887, 0),
+		Position = UDim2.new(0, 0, 1.2, 0),
 		BackgroundColor3 = Color3.fromRGB(85, 0, 255),
 		BackgroundTransparency = 0,
 		BorderSizePixel = 0,
@@ -2449,6 +2818,59 @@ local function createMM2Gui()
 		if gameProcessed then return end
 		if mm2Keybind and input.KeyCode == mm2Keybind then
 			toggleGunFarm()
+		end
+	end)
+	local gunDropEspActive = false
+	local gunDropHighlight = nil
+	local function stopGunDropEsp()
+		gunDropEspActive = false
+		if gunDropHighlight then
+			gunDropHighlight:Destroy()
+			gunDropHighlight = nil
+		end
+		gunDropButton.Text = "GunDrop Highlight: OFF"
+		gunDropButton.BackgroundColor3 = Color3.fromRGB(85, 0, 0)
+	end
+	task.spawn(function()
+		while true do
+			if not gunDropEspActive then
+				task.wait(0.5)
+				continue
+			end
+			local drop = Workspace:FindFirstChild("GunDrop", true)
+			if drop and drop.Parent then
+				if not gunDropHighlight or not gunDropHighlight.Parent or gunDropHighlight.Adornee ~= drop then
+					if gunDropHighlight then
+						gunDropHighlight:Destroy()
+					end
+					gunDropHighlight = Instance.new("Highlight")
+					gunDropHighlight.Name = "VlexGunDropHighlight"
+					gunDropHighlight.FillColor = Color3.fromRGB(0, 170, 255)
+					gunDropHighlight.FillTransparency = 0.3
+					gunDropHighlight.OutlineColor = Color3.fromRGB(0, 255, 255)
+					gunDropHighlight.OutlineTransparency = 0
+					gunDropHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+					gunDropHighlight.Adornee = drop
+					gunDropHighlight.Parent = drop
+				end
+			else
+				if gunDropHighlight then
+					gunDropHighlight:Destroy()
+					gunDropHighlight = nil
+				end
+			end
+			task.wait(0.25)
+		end
+	end)
+	gunDropButton.MouseButton1Click:Connect(function()
+		if gunDropEspActive then
+			stopGunDropEsp()
+			notify("MM2", "GunDrop highlight stopped")
+		else
+			gunDropEspActive = true
+			gunDropButton.Text = "GunDrop Highlight: ON"
+			gunDropButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+			notify("MM2", "GunDrop highlight started")
 		end
 	end)
 
